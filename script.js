@@ -39,10 +39,23 @@ if(appCarousel){
 
 // Company anchors reveal the requested story while keeping the overview compact.
 function revealCompany(hash){
- const target=hash&&document.getElementById(hash.slice(1));
+ const target=hash?document.getElementById(hash.slice(1)):null;
  const disclosure=target?.matches('article')?target.querySelector('.company-experience'):null;
  if(disclosure)disclosure.open=true;
 }
 document.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener('click',()=>revealCompany(link.getAttribute('href'))));
 window.addEventListener('hashchange',()=>revealCompany(location.hash));
 revealCompany(location.hash);
+
+const themeChoices=[...document.querySelectorAll('[data-theme-choice]')];
+function applyTheme(theme){
+ document.documentElement.dataset.theme=theme;
+ themeChoices.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.themeChoice===theme)));
+ try{localStorage.setItem('portfolio-theme',theme);}catch(e){}
+}
+applyTheme(document.documentElement.dataset.theme==='dark'?'dark':'light');
+themeChoices.forEach(button=>button.addEventListener('click',()=>applyTheme(button.dataset.themeChoice)));
+const backToTop=document.querySelector('.back-to-top');
+function updateBackToTop(){if(backToTop)backToTop.hidden=window.scrollY<400;}
+window.addEventListener('scroll',updateBackToTop,{passive:true});
+updateBackToTop();
