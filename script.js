@@ -36,3 +36,13 @@ if(appCarousel){
  document.addEventListener('visibilitychange',()=>{if(document.hidden)clearInterval(timer);else sync();});
  show(0);sync();
 }
+
+// Company anchors reveal the requested story while keeping the overview compact.
+function revealCompany(hash){
+ const target=hash&&document.getElementById(hash.slice(1));
+ const disclosure=target?.matches('article')?target.querySelector('.company-experience'):null;
+ if(disclosure)disclosure.open=true;
+}
+document.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener('click',()=>revealCompany(link.getAttribute('href'))));
+window.addEventListener('hashchange',()=>revealCompany(location.hash));
+revealCompany(location.hash);
